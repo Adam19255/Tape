@@ -1,0 +1,45 @@
+# Dependencies (if a package manager is added later)
+node_modules/
+
+# Build output / generated assets
+/dist/
+/build/
+/out/
+/coverage/
+
+# Firebase local state and debug logs
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+*-debug.log
+
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Operating system files
+.DS_Store
+.DS_Store?
+Thumbs.db
+Desktop.ini
+
+# Editor / IDE metadata
+.idea/
+.vscode/
+*.code-workspace
+
+# Local test artifacts
+/playwright-report/
+/test-results/
+/.cache/

@@ -11,7 +11,12 @@ const eventDescription=e=>`${e.title}${e.time?` at ${e.time} ET`:''}${e.status&&
 function eventMarks(events){
   const visible=events.slice(0,2).map(e=>`<span class="calendar-event-chip tone-${kindTone(e.kind)}" title="${esc(e.title)}">${esc(EVENT_CHIPS[e.kind]||e.kind)}</span>`).join('');
   const more=events.length>2?`<span class="calendar-event-more">+${events.length-2}</span>`:'';
-  return`<span class="calendar-event-markers" aria-hidden="true">${visible}${more}</span><span class="calendar-event-dot tone-${kindTone(events[0]?.kind)}" aria-hidden="true"></span>`;
+
+  // Phones use one category-coloured dot per event (up to three), then a compact overflow count.
+  // The desktop chips remain unchanged. The date button's aria-label contains every event description.
+  const mobileDots=events.slice(0,3).map(e=>`<span class="calendar-event-dot tone-${kindTone(e.kind)}"></span>`).join('');
+  const mobileMore=events.length>3?`<span class="calendar-event-dots-more">+${events.length-3}</span>`:'';
+  return`<span class="calendar-event-markers" aria-hidden="true">${visible}${more}</span><span class="calendar-event-dots" aria-hidden="true">${mobileDots}${mobileMore}</span>`;
 }
 export function MonthGrid({year,month,days,marks={},fmt,weekFmt=fmt,interactive=false,weekdays=['Sun','Mon','Tue','Wed','Thu','Fri','Sat']}){
   const key=year+'-'+String(month).padStart(2,'0'),n=new Date(year,month,0).getDate(),off=new Date(year,month-1,1).getDay();

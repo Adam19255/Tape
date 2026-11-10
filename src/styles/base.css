@@ -1,0 +1,63 @@
+/* Reset, typography, page layout, keyframes. */
+* { box-sizing: border-box; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.45 ui-sans-serif, -apple-system, "SF Pro Text", Inter, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h3, .hero-value { text-wrap: balance; }
+
+.numeric { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+
+/* ---- Page shell ---- */
+.page {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+}
+/* One row at every width: logo on the left, Add file + avatar together on the right. */
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+h1 { margin: 0; }
+/* Brand lockup: logo mark, then the site name. */
+.app-brand { display: flex; align-items: center; gap: 10px; }
+.app-logo { display: block; width: 36px; height: 36px; flex: none; }
+.app-title { font-size: 20px; font-weight: 650; letter-spacing: -.02em; line-height: 1; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+h3 small { font-weight: 400; }
+
+/* Main content area. Panels, hero and chips fade up on tab change; .is-static skips it
+   for in-place updates (typing, paging) so frequent actions never replay motion. */
+#view { display: flex; flex-direction: column; gap: 14px; }
+#view > * { margin: 0; }
+#view > .tab-bar { margin-bottom: 6px; }
+#view:not(.is-static) .panel,
+#view:not(.is-static) .hero,
+#view:not(.is-static) .chips { animation: fade-up 220ms var(--ease-out) both; }
+#view.is-static .stat-card { animation: none; opacity: 1; transform: none; }
+#view.is-static .equity-line { animation: none; stroke-dashoffset: 0; }
+
+/* ---- Layout helpers ---- */
+.two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+.two-column > .panel { margin: 0; }
+/* Grid items default to min-width:auto, so a wide table would stretch the column past the screen. */
+.two-column > * { min-width: 0; }
+.col { display: flex; flex-direction: column; gap: 14px; }
+.col .panel { margin: 0; }
+
+/* ---- Keyframes ---- */
+@keyframes rise-in { to { opacity: 1; transform: none; } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(6px); } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes draw-line { to { stroke-dashoffset: 0; } }
+
+/* Theme switch: where the browser supports view transitions, light and dark crossfade quickly instead of snapping. */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 180ms; animation-timing-function: var(--ease-out); }

@@ -1,0 +1,2 @@
+/** tabs: [{id,label,icon(svg path)}]. Top bar on desktop, bottom bar on phones (CSS). */
+export const TabBar=({tabs,active})=>`<nav class="tab-bar">${tabs.map(t=>`<button data-tab="${t.id}" class="${t.id===active?'is-active':''}" aria-label="${t.label}"${t.id===active?' aria-current="page"':''}><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${t.icon}"/></svg><span>${t.label}</span></button>`).join('')}</nav>`;

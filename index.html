@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tape</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- Apply a saved light theme before first paint so it never flashes dark. Dark is the default in tokens.css. -->
+<script>try{if(localStorage.getItem('tape-theme')==='light')document.documentElement.dataset.theme='light'}catch(e){}</script>
+<link rel="stylesheet" href="src/styles/tokens.css">
+<link rel="stylesheet" href="src/styles/base.css">
+<link rel="stylesheet" href="src/styles/components.css">
+<link rel="stylesheet" href="src/styles/responsive.css">
+</head>
+<body>
+<div class="page">
+<header>
+<h1 class="app-brand"><svg class="app-logo" viewBox="0 0 48 48" aria-hidden="true"><use href="assets/logo.svg#logo"/></svg><span class="app-title">Tape</span></h1>
+<div class="header-actions">
+<div class="toolbar" id="toolbar" hidden><label class="button">Add file<input type="file" id="file-input-more" accept=".txt,.tsv,.csv" multiple hidden></label></div>
+<div class="account" id="account" hidden></div>
+</div>
+</header>
+<section class="callout" id="auth-gate" aria-live="polite"></section>
+<section class="callout" id="dropzone" hidden><h2>Drop your messages file</h2><p>Parsed in your browser, then saved to your private account so it follows you to every device.</p>
+<label class="button button-primary">Choose .txt file<input type="file" id="file-input" accept=".txt,.tsv,.csv" multiple hidden></label></section>
+<main id="view" hidden></main>
+</div>
+<div class="toast-region" id="toast-region" aria-live="polite" popover="manual"></div>
+<!-- The one modal. Outside #view on purpose: render() rebuilds #view on almost every state change and would close it. -->
+<dialog class="modal" id="modal" aria-labelledby="modal-title"></dialog>
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

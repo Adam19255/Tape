@@ -1,0 +1,35 @@
+/* Design tokens: colours, easing. Dark is the default; [data-theme="light"] on <html> switches to light.
+   The toggle lives in the account menu and the choice is saved in localStorage ("tape-theme"). */
+:root {
+  --bg: #0d0e10;
+  --surface: #16171b;
+  --ink: #f2f2f0;
+  --muted: #8b8d95;
+  --line: #25272c;
+  --positive: #2ed18a;
+  --negative: #ff5c70;
+  --accent: #7b93ff;
+  --positive-bg: #2ed18a18;
+  --negative-bg: #ff5c7018;
+  --logo-accent: #2ed18a;
+  /* Strong ease-out: UI feels responsive because motion starts immediately. */
+  --ease-out: cubic-bezier(.23, 1, .32, 1);
+  color-scheme: dark;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+:root[data-theme="light"] {
+  --bg: #f6f6f4;
+  --surface: #fff;
+  --ink: #16171a;
+  --muted: #6b6d74;       /* darker than the first draft (#76787f): small grey text now clears 4.5:1 */
+  --line: #e6e6e2;
+  --positive: #087a4d;    /* likewise (#0a8f5a was 3.8:1 on --bg); the logo keeps its own green below */
+  --negative: #d7263d;
+  --accent: #3b5bfd;
+  --positive-bg: #087a4d14;
+  --negative-bg: #d7263d14;
+  --logo-accent: #0a8f5a;
+  color-scheme: light;
+}

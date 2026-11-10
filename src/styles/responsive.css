@@ -1,0 +1,110 @@
+/* Breakpoints, hover and reduced-motion queries. Loaded last on purpose. */
+
+/* Hover only where a real pointer exists; touch devices fire hover on tap. */
+@media (hover: hover) and (pointer: fine) {
+  button:hover, .button:hover { border-color: var(--muted); }
+  .row-clickable:hover td { background: var(--bg); }
+  .account-menu-item:hover { background: var(--bg); border-color: transparent; }
+  .toast-close:hover, .modal-close:hover, .modal-nav:not(:disabled):hover { background: var(--bg); color: var(--ink); border-color: transparent; }
+  .calendar-day[data-day]:hover, .calendar-day[data-week]:hover { box-shadow: inset 0 0 0 1px var(--muted); }
+  .modal-link:hover { text-decoration: underline; }
+}
+
+/* Reduced motion: drop movement, keep gentle fades that aid comprehension. */
+@media (prefers-reduced-motion: reduce) {
+  .stat-card { transform: none; }
+  .account-menu, .account.is-open .account-menu { transform: none; } /* fade only */
+  .toast, .toast.is-leaving { transform: none; } /* fade only */
+  .switch-thumb { transition: none; }
+  @starting-style { .toast { transform: none; } }
+  .modal, .modal[open] { transform: none; } /* fade only */
+  @starting-style { .modal[open] { transform: none; } }
+  .equity-line { animation-duration: 1ms; }
+  #view .panel, #view .hero, #view .chips, .row-detail { animation: none !important; }
+}
+
+@media (min-width: 1280px) { .page { max-width: 1180px; } }
+
+@media (max-width: 1024px) {
+  .page { padding-top: 24px; padding-bottom: 56px; }
+  .stat-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+}
+
+@media (max-width: 860px) {
+  .two-column { grid-template-columns: 1fr; }
+  .hero-value { font-size: clamp(40px, 10vw, 64px); }
+}
+
+/* Phones: bottom tab bar, two-column stat grid, compact calendar. */
+@media (max-width: 640px) {
+  .page { padding: 16px 14px calc(96px + env(safe-area-inset-bottom, 0px)); }
+  header { margin-bottom: 16px; }
+  .account-button { width: 40px; height: 40px; }
+  .toast-region { right: 14px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+  /* Modal: the whole screen. The header (X) and footer (Close) stay put while the body scrolls; the page behind is locked. */
+  .modal { width: 100vw; max-width: none; height: 100vh; height: 100dvh; max-height: none; border-radius: 0; box-shadow: none; }
+  .modal-header { padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) 12px max(20px, env(safe-area-inset-left, 0px)); }
+  .modal-body { padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+  .modal-footer { padding: 12px max(20px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px)); }
+  .modal-footer { flex-wrap: wrap; }
+  .modal-footer button { flex: 1; min-height: 44px; justify-content: center; }
+  .modal-actions { flex: 1 0 100%; margin-right: 0; }
+  .modal-actions button { flex: 1; }
+  html:has(.modal[open]) { overflow: hidden; }
+  @media (prefers-reduced-motion: no-preference) { /* a full-screen sheet rises instead of scaling */
+    .modal { transform: translateY(16px); }
+    @starting-style { .modal[open] { transform: translateY(16px); } }
+  }
+  .callout { padding: 44px 16px; }
+  .callout h2 { font-size: 19px; }
+
+  .tab-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+    margin: 0 !important;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+    gap: 0; justify-content: space-around; overflow: visible;
+    background: color-mix(in srgb, var(--surface) 86%, transparent);
+    -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+    border-top: 1px solid var(--line); border-bottom: 0;
+  }
+  .tab-bar button {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    min-height: 48px; padding: 6px 0; font-size: 11px; border-radius: 12px;
+    background: none !important; border-color: transparent !important;
+  }
+  .tab-bar button.is-active { color: var(--accent); }
+  .tab-icon { display: block; }
+
+  .stat-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .stat-card { padding: 12px; }
+  .stat-card-value { font-size: 19px; }
+  .panel { padding: 14px; border-radius: 16px; }
+  .chart-panel { padding: 0; border-radius: 0; }
+  .chart-hint { display: none; } /* the hover/drag hint does not apply to touch */
+  .hide-on-phone { display: none; }
+  td, th { padding: 9px 4px; }
+  /* Fit tables to the screen instead of scrolling sideways: labels may wrap, numbers may not. */
+  table { font-size: 13px; }
+  td:first-child { white-space: normal; }
+
+  .calendar-grid { min-width: 0; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .calendar-weekday:nth-child(8) { display: none; } /* the "Total" header; phones show a Week row instead */
+  .calendar-day { min-height: 52px; padding: 4px 3px; }
+  .calendar-header { flex-wrap: wrap; }
+  /* Phones: the month total drops to its own row, Export on the left and the total on the right. */
+  .calendar-summary { flex: 1 0 100%; margin-left: 0; flex-direction: row-reverse; justify-content: space-between; }
+  .calendar-day-value { font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .calendar-day-note { display: none; }
+  .calendar-week-total {
+    grid-column: 1 / -1; min-height: 0; flex-direction: row;
+    justify-content: space-between; align-items: center; padding: 6px 10px;
+  }
+  .calendar-week-total.is-blank { display: none; }
+
+  button, select, .button { min-height: 40px; }
+  .pager { justify-content: center; }
+  .field input { width: 120px; }
+}
+
+/* iOS zooms the page when a text field smaller than 16px gets focus; keep the modal's fields at 16px on touch screens. */
+@media (pointer: coarse) { .modal textarea, .modal input { font-size: 16px; } }

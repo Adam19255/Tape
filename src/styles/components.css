@@ -1,0 +1,340 @@
+/* One block per UI component. */
+
+/* ---- Buttons ---- */
+.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+button, .button, input[type=number] {
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 7px 12px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 140ms var(--ease-out), border-color 140ms var(--ease-out);
+}
+button:active, .button:active { transform: scale(.97); }
+button:disabled { opacity: .4; pointer-events: none; }
+.button-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); font-weight: 600; }
+/* A <label> styled as a button: unlike <button>, it does not centre its text inside min-height, so centre it explicitly. */
+.button { display: inline-flex; align-items: center; justify-content: center; }
+
+/* Google's light button style: white fill, neutral stroke, full-colour "G". */
+.button-google {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 44px; padding: 10px 18px;
+  background: #fff; color: #1f1f1f; border-color: #dadce0; font-weight: 600;
+}
+.button-google[aria-busy="true"] { opacity: .7; pointer-events: none; }
+.google-logo { width: 18px; height: 18px; flex: none; }
+
+/* ---- Account menu: avatar button + dropdown ---- */
+.account { position: relative; }
+.account-button {
+  position: relative; display: grid; place-items: center; overflow: hidden;
+  width: 36px; height: 36px; padding: 0; border-radius: 50%;
+  font-size: 14px; font-weight: 600;
+}
+.avatar-initial { line-height: 1; }
+.avatar-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.account-menu {
+  position: absolute; top: calc(100% + 8px); right: 0; z-index: 40;
+  min-width: 220px; max-width: min(300px, calc(100vw - 28px)); padding: 6px;
+  background: var(--surface); border-radius: 14px;
+  box-shadow: 0 0 0 1px var(--line), 0 10px 30px #00000026;
+  /* Grow out of the avatar, not the menu's own centre. Closing is quicker than opening. */
+  transform-origin: calc(100% - 20px) 0;
+  opacity: 0; transform: scale(.96); visibility: hidden; pointer-events: none;
+  transition: opacity 100ms var(--ease-out), transform 100ms var(--ease-out), visibility 0s linear 100ms;
+}
+.account.is-open .account-menu {
+  opacity: 1; transform: none; visibility: visible; pointer-events: auto;
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out), visibility 0s;
+}
+.account-menu-header { display: grid; gap: 1px; padding: 8px 10px 10px; margin-bottom: 6px; border-bottom: 1px solid var(--line); }
+.account-menu-header strong { font-size: 13px; }
+.account-menu-header span { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.account-menu-item {
+  display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px;
+  background: transparent; border-color: transparent; border-radius: 10px; text-align: left;
+}
+.account-menu-item svg { width: 16px; height: 16px; flex: none; }
+.account-menu-item:active { background: var(--line); transform: none; }
+/* Dark mode switch: a menu row whose on/off look is driven by aria-checked (kept in sync by main.js). */
+.switch { flex: none; margin-left: auto; width: 32px; height: 18px; padding: 2px; border-radius: 99px; background: var(--muted); transition: background-color 160ms var(--ease-out); }
+.switch-thumb { display: block; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); transition: transform 160ms var(--ease-out); }
+[aria-checked="true"] > .switch { background: var(--accent); }
+[aria-checked="true"] > .switch > .switch-thumb { transform: translateX(14px); }
+
+/* ---- Toast: short-lived success / failure messages (components/Toast.js, services/notify.js) ---- */
+.toast-region {
+  position: fixed; inset: auto 20px 20px auto; z-index: 50;
+  margin: 0; padding: 0; border: 0; background: transparent; overflow: visible; height: auto; /* undo the browser's popover look */
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+  width: min(360px, calc(100vw - 28px)); pointer-events: none; /* only the toasts catch clicks, never the empty region */
+}
+.toast {
+  display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 12px 8px 12px 14px;
+  background: var(--surface); border-radius: 14px; pointer-events: auto;
+  box-shadow: 0 0 0 1px var(--line), 0 10px 30px #00000026;
+  /* Transitions, not keyframes: toasts can arrive and leave in quick succession and transitions retarget smoothly. */
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+@starting-style { .toast { opacity: 0; transform: translateY(8px) scale(.98); } }
+/* Leaves the way it came (downwards), and quicker than it arrived. */
+.toast.is-leaving { opacity: 0; transform: translateY(4px) scale(.98); transition-duration: 140ms; pointer-events: none; }
+.toast-icon { display: grid; flex: none; margin-top: 1px; }
+.toast-icon svg { width: 18px; height: 18px; }
+.toast-body { display: grid; gap: 1px; flex: 1; min-width: 0; }
+.toast-title { font-size: 13px; overflow-wrap: anywhere; }
+.toast-text { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.toast-close {
+  display: grid; place-items: center; flex: none; width: 28px; height: 28px; min-height: 0; padding: 0;
+  background: transparent; border-color: transparent; border-radius: 8px; color: var(--muted);
+}
+.toast-close svg { width: 14px; height: 14px; }
+
+/* ---- Modal: the app's one <dialog id="modal"> (components/Modal.js). Full screen on phones, see responsive.css. ---- */
+.modal {
+  width: min(560px, calc(100vw - 32px)); max-height: min(720px, calc(100dvh - 48px));
+  padding: 0; border: 0; border-radius: 18px; overflow: hidden;
+  background: var(--surface); color: var(--ink); box-shadow: 0 0 0 1px var(--line), 0 24px 60px #00000040;
+  /* The closed state is where it leaves to, and leaving (140ms) is quicker than arriving (200ms). Modals scale from the centre. */
+  opacity: 0; transform: translateY(8px) scale(.97);
+  transition: opacity 140ms var(--ease-out), transform 140ms var(--ease-out), overlay 140ms allow-discrete, display 140ms allow-discrete;
+}
+.modal[open] { opacity: 1; transform: none; transition-duration: 200ms; }
+@starting-style { .modal[open] { opacity: 0; transform: translateY(8px) scale(.97); } }
+.modal::backdrop { background: #00000066; opacity: 0; transition: opacity 140ms var(--ease-out), overlay 140ms allow-discrete, display 140ms allow-discrete; }
+.modal[open]::backdrop { opacity: 1; transition-duration: 200ms; }
+@starting-style { .modal[open]::backdrop { opacity: 0; } }
+.modal-card { display: flex; flex-direction: column; height: 100%; max-height: inherit; }
+.modal-header { display: flex; align-items: flex-start; gap: 12px; flex: none; padding: 16px 16px 12px 20px; border-bottom: 1px solid var(--line); }
+.modal-title { flex: 1; min-width: 0; margin: 0; font-size: 17px; font-weight: 650; letter-spacing: -.01em; text-wrap: balance; }
+.modal-nav-group { display: flex; flex: none; gap: 2px; }
+.modal-close {
+  display: grid; place-items: center; flex: none; width: 32px; height: 32px; min-height: 0; padding: 0;
+  background: transparent; border-color: transparent; border-radius: 10px; color: var(--muted);
+}
+.modal-close svg { width: 16px; height: 16px; }
+.modal-nav {
+  display: grid; place-items: center; flex: none; width: 32px; height: 32px; min-height: 0; padding: 0;
+  background: transparent; border-color: transparent; border-radius: 10px; color: var(--muted); font-size: 20px; line-height: 1;
+}
+.modal-body { --modal-pad-y: 16px; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--modal-pad-y) 20px; }
+.modal-footer { display: flex; justify-content: flex-end; align-items: center; gap: 8px; flex: none; padding: 12px 20px; border-top: 1px solid var(--line); }
+.modal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-right: auto; }
+.modal-summary { display: grid; gap: 2px; margin-bottom: 14px; }
+.modal-net { font-size: 28px; font-weight: 650; letter-spacing: -.02em; line-height: 1.1; }
+.modal-note { color: var(--muted); font-size: 12px; }
+.modal-section-title { margin: 20px 0 8px; font-size: 13px; font-weight: 550; color: var(--muted); }
+.modal-body textarea { width: 100%; }
+.modal-body .tag-list input[data-tag] { width: 160px; padding: 4px 10px; border-radius: 99px; } /* same pill shape as the tags it sits beside (the [data-tag] beats the shared field rule further down) */
+.modal-link { min-height: 0; padding: 0; border: 0; background: none; color: var(--accent); font: inherit; text-align: left; }
+/* The trade table's header stays in view while a long day scrolls. Sticky needs the vertical scroller to be .modal-body, so the
+   table wrapper must not scroll on its own; and a sticky cell can't keep a collapsed border, so the rule is a shadow instead. */
+.modal-body .scroll-x { overflow: visible; }
+.modal-body th { position: sticky; top: calc(-1 * var(--modal-pad-y)); z-index: 1; /* sticky offsets start inside the body's padding */ background: var(--surface); border-bottom: 0; box-shadow: inset 0 -1px 0 var(--line); }
+
+/* ---- Market events panel on Settings (components/MarketEvents.js) ---- */
+.admin-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.admin-preview { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13px; }
+.admin-errors { margin: 8px 0; padding-left: 18px; color: var(--negative); }
+
+/* ---- Callout (sign-in gate and file drop target) ---- */
+.callout {
+  border: 1.5px dashed var(--line);
+  border-radius: 20px;
+  padding: 72px 24px;
+  text-align: center;
+  background: var(--surface);
+  transition: border-color 160ms var(--ease-out), transform 160ms var(--ease-out), background 160ms var(--ease-out);
+}
+.callout.is-dragging { border-color: var(--accent); transform: scale(1.005); background: var(--positive-bg); }
+.callout h2 { font-size: 22px; margin: 0 0 6px; letter-spacing: -.01em; }
+.callout p { color: var(--muted); margin: 0 0 20px; }
+
+/* ---- Value tones ---- */
+.positive { color: var(--positive); }
+.negative { color: var(--negative); }
+.hint { color: var(--muted); font-size: 12px; }
+
+/* ---- Hero ---- */
+.hero { padding: 4px 0 2px; }
+.hero-label { display: block; color: var(--muted); margin-bottom: 6px; }
+.hero-value { font-size: clamp(44px, 9vw, 76px); letter-spacing: -.035em; font-weight: 650; line-height: 1; }
+.hero-change { margin-top: 10px; font-size: 17px; font-weight: 600; }
+.hero-change-label { color: var(--ink); font-weight: 500; margin-left: 6px; }
+
+/* ---- Stat cards ---- */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.stat-card {
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: rise-in 240ms var(--ease-out) forwards;
+  /* Stagger the first few cards only; 24 cards at 35ms each took over a second to finish. */
+  animation-delay: calc(min(var(--index), 8) * 30ms);
+}
+.stat-card-label { display: block; color: var(--muted); font-size: 12px; }
+.stat-card-value { display: block; margin-top: 2px; font-size: 22px; font-weight: 620; letter-spacing: -.015em; }
+.stat-card-note { display: block; min-height: 1.35em; color: var(--muted); font-size: 12px; }
+
+/* ---- Panel ---- */
+.panel { background: var(--surface); box-shadow: 0 0 0 1px var(--line); border-radius: 18px; padding: 18px; margin-bottom: 14px; }
+.panel h3 { margin: 0 0 12px; font-size: 13px; color: var(--muted); font-weight: 550; }
+.goal-meters { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+.goal-meters small { display: block; color: var(--muted); margin-bottom: 2px; }
+
+/* ---- Progress bar ---- */
+.progress { height: 8px; border-radius: 4px; background: var(--negative-bg); overflow: hidden; margin-top: 10px; }
+.progress-fill { height: 100%; background: var(--positive); transition: width 400ms var(--ease-out); }
+
+/* ---- Tab bar and chips ---- */
+.tab-bar, .chips { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 16px; }
+.tab-bar { border-bottom: 1px solid var(--line); padding: 2px 2px 12px; margin-bottom: 20px; }
+.chips { padding: 2px; }
+.tab-bar button, .chips button {
+  border-radius: 99px; padding: 6px 14px; white-space: nowrap;
+  background: transparent; border-color: transparent; color: var(--muted);
+  transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out),
+              border-color 160ms var(--ease-out), transform 140ms var(--ease-out);
+}
+.tab-bar button.is-active, .chips button.is-active {
+  background: var(--surface); border-color: var(--line); color: var(--ink); font-weight: 600;
+}
+.tab-icon { display: none; width: 22px; height: 22px; } /* shown on phones only */
+
+/* Range selector under the chart: evenly spaced, the active one filled. It sits inside a panel that already
+   fades in, so it does not animate on its own. */
+.range-tabs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; margin: 14px 0 0; padding: 0; overflow: visible; }
+.range-tabs button { padding: 8px 0; border-radius: 12px; color: var(--ink); font-weight: 600; }
+.range-tabs button.is-active { background: color-mix(in srgb, var(--accent) 22%, transparent); border-color: transparent; color: var(--accent); }
+#view:not(.is-static) .range-tabs { animation: none; }
+
+/* ---- Tables ---- */
+.scroll-x { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+th { font-weight: 550; color: var(--muted); font-size: 12px; text-align: right; padding: 6px 10px; border-bottom: 1px solid var(--line); }
+td { padding: 9px 10px; text-align: right; border-bottom: 1px solid var(--line); transition: background-color 120ms var(--ease-out); }
+th:first-child, td:first-child, .align-left { text-align: left; }
+tr:last-child td { border: 0; }
+.row-clickable { cursor: pointer; }
+.row-clickable:active td { background: var(--line); }
+.row-clickable.is-selected td { background: var(--bg); }
+.row-detail { background: var(--bg); white-space: normal; animation: fade-up 220ms var(--ease-out); }
+.row-detail h3 { margin: 14px 0 8px; }
+.detail-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+.export-button[aria-busy="true"] { opacity: .7; }
+.scroll-list { max-height: 224px; overflow-y: auto; overscroll-behavior: contain; margin: 0 -6px; padding: 0 6px; }
+.scroll-list th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
+.pill-long { background: var(--positive-bg); color: var(--positive); }
+.pill-short { background: var(--negative-bg); color: var(--negative); }
+
+/* ---- Pager ---- */
+.pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+.pager > div { display: flex; align-items: center; gap: 10px; }
+.pager-size { color: var(--muted); font-size: 13px; display: flex; gap: 8px; align-items: center; }
+
+/* ---- Forms ---- */
+input[type=number] { width: 84px; cursor: text; font-size: 16px; padding: 6px 10px; }
+.search-input, .field input, td input, textarea, .modal-body .tag-list input {
+  font: inherit; font-size: 16px; color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; width: 100%;
+}
+textarea { resize: vertical; }
+.search-input { margin-bottom: 12px; }
+td input { width: 92px; padding: 4px 8px; text-align: right; }
+.field { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--muted); margin-bottom: 10px; }
+.field input { width: 150px; }
+select {
+  font: inherit; font-size: 16px; color: var(--ink); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 10px; padding: 7px 10px; min-height: 36px; cursor: pointer;
+}
+
+/* ---- Trade detail: cost rows, list rows, tags ---- */
+.cost-row, .list-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.cost-row.is-total { border: 0; font-size: 16px; }
+.tag-list { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag-list input { width: 150px; }
+.tag { background: var(--surface); border: 1px solid var(--line); border-radius: 99px; padding: 2px 4px 2px 10px; display: inline-flex; align-items: center; gap: 2px; }
+.tag button { border: 0; background: none; padding: 0 6px; }
+
+/* ---- Export button ---- */
+.export-button { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.export-icon { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; }
+.view-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.view-toolbar .chips { margin-bottom: 0; min-width: 0; }
+.list-row-label { min-width: 0; margin-right: 12px; overflow-wrap: anywhere; }
+.list-row-actions { display: flex; gap: 6px; flex: none; }
+
+/* ---- Calendar ---- */
+.calendar-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.calendar-summary { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.calendar-summary > span { font-weight: 600; }
+.calendar-grid { display: grid; grid-template-columns: repeat(8, minmax(78px, 1fr)); gap: 4px; min-width: 660px; }
+.calendar-weekday { color: var(--muted); font-size: 12px; text-align: center; }
+.calendar-day { min-width: 0; min-height: 72px; border-radius: 10px; padding: 6px 8px; background: var(--bg); display: flex; flex-direction: column; gap: 2px; }
+.calendar-day-number { color: var(--muted); font-size: 11px; }
+.calendar-day-value { font-size: 13px; }
+.calendar-day-note { color: var(--muted); font-size: 11px; }
+.calendar-day.is-empty { background: none; }
+.calendar-day.is-gain { background: var(--positive-bg); }
+.calendar-day.is-gain .calendar-day-value { color: var(--positive); }
+.calendar-day.is-loss { background: var(--negative-bg); }
+.calendar-day.is-loss .calendar-day-value { color: var(--negative); }
+.calendar-week-total { background: var(--surface); border: 1px solid var(--line); }
+/* Days with trades are buttons (they open the day modal): undo the global button look, keep the day's own colours. */
+button.calendar-day { font: inherit; color: inherit; text-align: left; border: 0; cursor: pointer; transition: transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out); }
+button.calendar-week-total { border: 1px solid var(--line); }
+.calendar-day { position: relative; }
+.calendar-day-noted { position: absolute; top: 5px; right: 5px; width: 10px; height: 10px; color: var(--muted); } /* this day has a note */
+
+/* ---- Line chart ---- */
+.chart { position: relative; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.chart svg { touch-action: pan-y; cursor: crosshair; }
+.equity-line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw-line 500ms var(--ease-out) 80ms forwards; }
+/* The fill and end dot fade in as the line finishes drawing, so they never show before the line they belong to. */
+.chart-fill, .chart-end-dot, .chart-end-halo { animation: fade-in 300ms var(--ease-out) 260ms backwards; }
+.chart-end-dot, .chart-end-halo { transition: opacity 120ms var(--ease-out); }
+/* While hovering, only the line and the dot under the pointer show. */
+.chart.is-scrubbing .chart-end-dot, .chart.is-scrubbing .chart-end-halo { opacity: 0; }
+#view.is-static .chart-fill, #view.is-static .chart-end-dot, #view.is-static .chart-end-halo { animation: none; }
+/* Chart without a card: sits directly on the page like a portfolio graph. */
+.chart-panel { background: none; box-shadow: none; border-radius: 0; padding: 0; }
+.chart-axis { position: relative; height: 18px; margin-top: 8px; color: var(--muted); font-size: 12px; }
+.chart-axis span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+.chart-axis .is-start { transform: none; }
+.chart-axis .is-end { transform: translateX(-100%); }
+.chart-hint { margin: 10px 0 0; text-align: center; }
+/* Hover label: a small pill in the empty band above the line (the chart leaves that band free), so it never covers the data.
+   A single point shows its date; comparing two shows both dates and the change. */
+.chart-tooltip {
+  position: absolute; top: 0; left: 0; z-index: 2; pointer-events: none; white-space: nowrap; text-align: center;
+  background: var(--surface); border-radius: 99px; padding: 4px 10px; font-size: 12px; line-height: 16px;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.chart-tooltip.is-range { border-radius: 12px; padding: 5px 12px; }
+.tooltip-dates { color: var(--muted); }
+.tooltip-change { font-size: 13px; font-weight: 650; }
+
+/* ---- Unused (kept: removal needs sign-off) ---- */
+.bar { display: inline-block; height: 6px; border-radius: 3px; vertical-align: middle; }
+details summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+details[open] summary { margin-bottom: 10px; }
+
+/* ---- Account value hero and funds ledger ---- */
+.hero-change + .hero-change { margin-top: 2px; }
+/* The idle change lines and the hover line share one slot (flow-root keeps the lines' top margin inside it), so the page never jumps. */
+.hero-changes { position: relative; display: flow-root; }
+.hero-scrub { position: absolute; top: 0; left: 0; visibility: hidden; }
+.hero.is-scrubbing .hero-idle { visibility: hidden; }
+.hero.is-scrubbing .hero-scrub { visibility: visible; }
+.hero-hint { margin: 10px 0 0; }
+.link-button { background: none; border: 0; padding: 0; min-height: 0; color: var(--accent); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.fund-form { display: grid; gap: 4px; margin-bottom: 18px; }
+.fund-form .primary { justify-self: start; }

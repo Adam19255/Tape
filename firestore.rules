@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Open sign-up: any signed-in Google account (verified email) may use the app.
+    // Each person can only ever touch their own data under /users/{their uid}.
+    function isOwner(uid) {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.uid == uid;
+    }
+
+    // Any signed-in Google account with a verified email. Not tied to a particular uid.
+    function isUser() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    // The admin is whoever has a document at admins/{their uid}. Nothing in the app can create or change those documents (see
+    // below), so the only way to become admin is to add the document by hand in the Firebase console. exists() is billed as one read,
+    // but it only runs when someone tries to write shared/events.
+    function isAdmin() {
+      return isUser() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // admins/{uid}: the "am I an admin?" flag. You can ask only about yourself, and nobody can write it from the app.
+    // Never put an admin flag inside users/{uid}: its owner can write that document, so anyone could make themselves admin.
+    match /admins/{uid} {
+      allow get: if isOwner(uid);
+      allow list, create, update, delete: if false;
+    }
+
+    // shared/events: market events (CPI, FOMC, holidays...) uploaded by the admin, read by every signed-in user.
+    // The rules can only check the top level, so the app validates every event before upload and escapes them when shown.
+    match /shared/events {
+      allow get: if isUser();
+      allow create, update: if isAdmin()
+        && request.resource.data.keys().hasOnly(['v', 'updated', 'events'])
+        && request.resource.data.v == 1
+        && request.resource.data.updated is string && request.resource.data.updated.size() <= 10
+        && request.resource.data.events is list && request.resource.data.events.size() <= 3000;
+      allow list, delete: if false;
+    }
+
+    // users/{uid}: settings and notes. Shape is fixed so nobody can stash arbitrary data.
+    match /users/{uid} {
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && request.resource.data.keys().hasOnly(['cfg', 'nt'])
+        && request.resource.data.cfg is map
+        && request.resource.data.nt is map;
+    }
+
+    // users/{uid}/logs/{id}: one raw log file per document (app limit ~900 KB).
+    match /users/{uid}/logs/{logId} {
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && request.resource.data.keys().hasOnly(['name', 'date', 'txt', 'n'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 255
+        && request.resource.data.date is string && request.resource.data.date.size() <= 10
+        && request.resource.data.txt is string && request.resource.data.txt.size() <= 900000
+        && request.resource.data.n is number;
+    }
+  }
+}

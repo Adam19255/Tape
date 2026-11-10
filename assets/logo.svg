@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <!-- Tape logo: "Equity curve". Colours come from the app's theme tokens, so the mark follows the light/dark toggle
+       when the page references it with <use href="assets/logo.svg#logo">. The fallbacks (light palette) are what you
+       see when this file is opened on its own. An <img> would only follow the OS theme, not the in-app toggle. -->
+  <g id="logo">
+    <rect width="48" height="48" rx="12" fill="var(--ink, #16171a)"/>
+    <path d="M10 33l9-9 6 5 13-14" fill="none" stroke="var(--bg, #f6f6f4)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="38" cy="15" r="4.5" fill="var(--logo-accent, #0a8f5a)"/>
+  </g>
+</svg>

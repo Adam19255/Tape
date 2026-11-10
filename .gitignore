@@ -9,6 +9,7 @@ node_modules/
 
 # Firebase local state and debug logs
 .firebase/
+.firebase*
 firebase-debug.log
 firestore-debug.log
 ui-debug.log

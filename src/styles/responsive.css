@@ -108,3 +108,10 @@
 
 /* iOS zooms the page when a text field smaller than 16px gets focus; keep the modal's fields at 16px on touch screens. */
 @media (pointer: coarse) { .modal textarea, .modal input { font-size: 16px; } }
+
+@media (max-width: 640px) {
+  .calendar-event-markers { display: none; }
+  .calendar-event-dot { display: block; flex: none; width: 6px; height: 6px; margin: auto auto 2px; border-radius: 50%; background: var(--accent); }
+  .calendar-day.has-events { border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+  .modal-footer-note { flex: 1 1 100%; order: 3; text-align: center; }
+}

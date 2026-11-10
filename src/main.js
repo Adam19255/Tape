@@ -152,7 +152,8 @@ const on=(type,sel,fn)=>document.addEventListener(type,e=>{const t=e.target.clos
 on('click','[data-tab]',b=>set({tab:b.dataset.tab},true));
 on('click','[data-tf]',b=>set({tf:b.dataset.tf}));
 on('click','[data-net]',b=>set({net:b.dataset.net==='1'}));
-on('click','[data-m]',b=>{const[y,mo]=(st.mon||latest(ctx().trades).slice(0,7)).split('-').map(Number);set({mon:ym(new Date(y,mo-1+ +b.dataset.m,1))})});
+const calendarMonth=()=>st.mon||(ctx().trades.length?latest(ctx().trades).slice(0,7):ymd(new Date()).slice(0,7));
+on('click','[data-m]',b=>{const[y,mo]=calendarMonth().split('-').map(Number);set({mon:ym(new Date(y,mo-1+ +b.dataset.m,1))})});
 on('click','[data-day]',b=>set({modal:{kind:'day',key:b.dataset.day}}));
 on('click','[data-week]',b=>set({modal:{kind:'week',key:b.dataset.week}}));
 on('click','[data-modal-close]',closeModal);
@@ -245,7 +246,7 @@ on('click','[data-act]',async b=>{
 on('keydown','[data-tag]',(t,e)=>{const v=t.value.trim();if(e.key!=='Enter'||!v)return;const k=noteKey(t),n=st.NT[k]||(st.NT[k]={tags:[]});n.tags=n.tags||[];if(!n.tags.includes(v))n.tags.push(v);t.value='';saveSettings();set({})});
 on('input','#trade-search',t=>{st.q=t.value;st.pg=1;refreshList()});
 on('change','[data-ps]',t=>{st.ps=+t.value;st.pg=1;localStorage.setItem('tape-ps',st.ps);refreshList()});
-on('change','[data-mm],[data-yy]',t=>{const[y,mo]=(st.mon||latest(ctx().trades).slice(0,7)).split('-');set({mon:t.dataset.mm!==undefined?y+'-'+t.value.padStart(2,'0'):t.value+'-'+mo})});
+on('change','[data-mm],[data-yy]',t=>{const[y,mo]=calendarMonth().split('-');set({mon:t.dataset.mm!==undefined?y+'-'+t.value.padStart(2,'0'):t.value+'-'+mo})});
 on('change','[data-note]',t=>{const k=noteKey(t);(st.NT[k]||(st.NT[k]={tags:[]})).n=t.value;tidyNote(k);saveSettings();syncModal()});
 on('change','[data-c]',t=>{const k=t.dataset.c;st.CFG[k]=k==='ver'?t.value:parseFloat(t.value)||0;saveSettings();set({})});
 on('change','[data-s]',t=>{const[i,j]=t.dataset.s.split('|');st.CFG.sched[Object.keys(st.CFG.sched)[i]][j]=parseFloat(t.value)||0;saveSettings();set({})});

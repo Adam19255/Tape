@@ -7,5 +7,5 @@ const step=(dir,key,noun)=>`<button class="modal-nav" data-modal-nav="${dir}" da
  * actions: buttons shown to the left of Close. Both close controls (the X and the footer button) carry [data-modal-close].
  * data-focus marks controls main.js puts the cursor back on after the modal re-renders.
  */
-export const Modal=({title,body='',nav=null,actions=''})=>
-  `<div class="modal-card"><div class="modal-header"><h2 class="modal-title" id="modal-title">${esc(title)}</h2>${nav?`<div class="modal-nav-group">${step('prev',nav.prev,nav.noun)}${step('next',nav.next,nav.noun)}</div>`:''}<button class="modal-close" data-modal-close aria-label="Close">${CLOSE_ICON}</button></div><div class="modal-body">${body}</div><div class="modal-footer">${actions?`<div class="modal-actions">${actions}</div>`:''}<button data-modal-close>Close</button></div></div>`;
+export const Modal=({title,body='',nav=null,actions='',footerNote=''})=>
+  `<div class="modal-card"><div class="modal-header"><h2 class="modal-title" id="modal-title">${esc(title)}</h2>${nav?`<div class="modal-nav-group">${step('prev',nav.prev,nav.noun)}${step('next',nav.next,nav.noun)}</div>`:''}<button class="modal-close" data-modal-close aria-label="Close">${CLOSE_ICON}</button></div><div class="modal-body">${body}</div><div class="modal-footer">${footerNote?`<span class="modal-footer-note">${esc(footerNote)}</span>`:''}${actions?`<div class="modal-actions">${actions}</div>`:''}<button data-modal-close>Close</button></div></div>`;

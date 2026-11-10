@@ -338,3 +338,28 @@ details[open] summary { margin-bottom: 10px; }
 .link-button { background: none; border: 0; padding: 0; min-height: 0; color: var(--accent); font: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .fund-form { display: grid; gap: 4px; margin-bottom: 18px; }
 .fund-form .primary { justify-self: start; }
+
+/* ---- Calendar market-event markers and day-modal details ---- */
+.calendar-day.has-events { border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--line)); }
+.calendar-day.is-event-only { background: color-mix(in srgb, var(--accent) 7%, var(--bg)); }
+.calendar-event-markers { display: flex; align-items: center; flex-wrap: nowrap; gap: 3px; min-width: 0; margin-top: auto; overflow: hidden; }
+.calendar-event-chip, .calendar-event-more {
+  display: inline-block; min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  padding: 1px 4px; border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent); border-radius: 5px;
+  background: color-mix(in srgb, var(--accent) 11%, transparent); color: var(--accent); font-size: 9px; line-height: 1.35;
+}
+.calendar-event-more { flex: none; background: transparent; }
+.calendar-event-dot { display: none; }
+.market-event-section { margin: 18px 0 8px; }
+.market-event-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.market-event-row { min-width: 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.market-event-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; }
+.market-event-heading strong { min-width: 0; overflow-wrap: anywhere; }
+.market-event-heading a { color: var(--accent); text-decoration: none; }
+.market-event-kind { color: var(--muted); font-size: 11px; }
+.market-event-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 4px; color: var(--muted); font-size: 12px; }
+.market-event-status { padding: 2px 6px; border-radius: 99px; background: var(--surface); color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .03em; }
+.market-event-status.is-canceled { color: var(--negative); }
+.market-event-status.is-rescheduled { color: var(--accent); }
+.market-event-legend { margin: 10px 0 0; color: var(--muted); font-size: 11px; }
+.modal-footer-note { min-width: 0; margin-right: auto; color: var(--muted); font-size: 11px; }

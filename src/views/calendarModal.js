@@ -2,7 +2,7 @@ import {DataTable} from '../components/DataTable.js';
 import {NoteEditor} from '../components/NoteEditor.js';
 import {ShareButton} from '../components/ShareButton.js';
 import {daySummary,rangeSummary,neighbours,longDate} from '../lib/daySummary.js';
-import {indexByDate,kindLabel} from '../lib/events.js';
+import {indexByDate,kindLabel,kindTone} from '../lib/events.js';
 import {fromMarketTime} from '../lib/time.js';
 import {esc,sg,cls,m,ymd} from '../lib/format.js';
 
@@ -27,7 +27,7 @@ function marketEvents(events){
     const status=e.status&&e.status!=='scheduled'?`<span class="market-event-status is-${esc(e.status)}">${esc(e.status==='rescheduled'?'Rescheduled':'Canceled')}</span>`:'';
     const was=e.was?`<span class="market-event-was">was ${esc(dateLabel(e.was))}</span>`:'';
     const title=e.url?`<a href="${esc(e.url)}" target="_blank" rel="noopener noreferrer">${esc(e.title)}</a>`:esc(e.title);
-    return`<li class="market-event-row"><div class="market-event-heading"><strong>${title}</strong><span class="market-event-kind">${esc(kindLabel(e.kind))}</span>${status}</div><div class="market-event-meta">${time}${was}</div></li>`;
+    return`<li class="market-event-row tone-${kindTone(e.kind)}"><div class="market-event-heading"><strong>${title}</strong><span class="market-event-kind">${esc(kindLabel(e.kind))}</span>${status}</div><div class="market-event-meta">${time}${was}</div></li>`;
   }).join('');
   return`<section class="market-event-section"><h3 class="modal-section-title">Market events</h3><ul class="market-event-list">${rows}</ul><p class="market-event-legend">Times are shown in your local time, followed by New York time (ET). Badges mark rescheduled or canceled events.</p></section>`;
 }

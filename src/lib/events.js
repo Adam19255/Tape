@@ -14,6 +14,10 @@ export const KINDS={
 };
 /** Filter groups shown to the user. Sessions (closed days, early closes) are always shown, so they are not a filter. */
 export const GROUPS={fed:'Fed',inflation:'Inflation',jobs:'Jobs',gdp:'GDP'};
+/** Stable semantic color class for calendar markers, filters and event details. */
+export const KIND_TONES={cpi:'inflation',ppi:'inflation',pce:'inflation',jobs:'jobs',jolts:'jobs',gdp:'gdp',fomc:'fed',minutes:'fed',closed:'closed','early-close':'early-close'};
+export const kindTone=k=>KIND_TONES[k]||'other';
+export const kindGroup=k=>KINDS[k]?.group||'other';
 export const STATUSES=['scheduled','rescheduled','canceled'];
 /** Hard limits. The security rules enforce the event count; the rest protect the page and the 1 MiB document. */
 export const LIMITS={events:3000,bytes:800000,title:120,url:300};

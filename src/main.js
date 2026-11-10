@@ -154,6 +154,7 @@ on('click','[data-tf]',b=>set({tf:b.dataset.tf}));
 on('click','[data-net]',b=>set({net:b.dataset.net==='1'}));
 const calendarMonth=()=>st.mon||(ctx().trades.length?latest(ctx().trades).slice(0,7):ymd(new Date()).slice(0,7));
 on('click','[data-m]',b=>{const[y,mo]=calendarMonth().split('-').map(Number);set({mon:ym(new Date(y,mo-1+ +b.dataset.m,1))})});
+on('click','[data-ev-filter]',b=>{const key=b.dataset.evFilter,active=st.evFilters||['fed','inflation','jobs','gdp'];set({evFilters:active.includes(key)?active.filter(x=>x!==key):[...active,key]})});
 on('click','[data-day]',b=>set({modal:{kind:'day',key:b.dataset.day}}));
 on('click','[data-week]',b=>set({modal:{kind:'week',key:b.dataset.week}}));
 on('click','[data-modal-close]',closeModal);

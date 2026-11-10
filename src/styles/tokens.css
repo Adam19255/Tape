@@ -33,3 +33,14 @@
   --logo-accent: #0a8f5a;
   color-scheme: light;
 }
+
+/* Market-event palette: shared by calendar chips, filters and modal rows. */
+:root {
+  --event-inflation: #3b82f6;
+  --event-fed: #a855f7;
+  --event-jobs: #d97706;
+  --event-gdp: #0d9488;
+  --event-closed: #dc2626;
+  --event-early-close: #64748b;
+  --event-other: #16a34a;
+}

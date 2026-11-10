@@ -363,3 +363,35 @@ details[open] summary { margin-bottom: 10px; }
 .market-event-status.is-rescheduled { color: var(--accent); }
 .market-event-legend { margin: 10px 0 0; color: var(--muted); font-size: 11px; }
 .modal-footer-note { min-width: 0; margin-right: auto; color: var(--muted); font-size: 11px; }
+
+/* Category colors are semantic tokens, so every representation stays consistent. */
+.calendar-day.has-events { border-color: color-mix(in srgb, var(--event-other) 35%, var(--line)); }
+.calendar-day.is-market-closed { opacity: .68; background: color-mix(in srgb, var(--event-closed) 7%, var(--bg)); }
+.calendar-day.is-market-closed .calendar-day-number { color: var(--event-closed); }
+.calendar-day.is-early-close { box-shadow: inset 0 -2px 0 var(--event-early-close); }
+.calendar-event-chip.tone-inflation,.market-event-row.tone-inflation { --event-tone: var(--event-inflation); }
+.calendar-event-chip.tone-fed,.market-event-row.tone-fed { --event-tone: var(--event-fed); }
+.calendar-event-chip.tone-jobs,.market-event-row.tone-jobs { --event-tone: var(--event-jobs); }
+.calendar-event-chip.tone-gdp,.market-event-row.tone-gdp { --event-tone: var(--event-gdp); }
+.calendar-event-chip.tone-closed,.market-event-row.tone-closed { --event-tone: var(--event-closed); }
+.calendar-event-chip.tone-early-close,.market-event-row.tone-early-close { --event-tone: var(--event-early-close); }
+.calendar-event-chip { border-color: color-mix(in srgb, var(--event-tone, var(--event-other)) 40%, transparent); background: color-mix(in srgb, var(--event-tone, var(--event-other)) 14%, transparent); color: var(--event-tone, var(--event-other)); }
+.market-event-row { border-left: 3px solid var(--event-tone, var(--event-other)); }
+.calendar-event-filters { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:0 0 10px; }
+.event-filter { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:99px; padding:5px 9px; background:var(--surface); color:var(--ink); font:inherit; font-size:11px; cursor:pointer; }
+.event-filter.is-off { opacity:.45; }
+.event-filter-dot { width:7px; height:7px; border-radius:50%; background:var(--filter-tone); }
+.event-filter.tone-fed { --filter-tone:var(--event-fed); }
+.event-filter.tone-inflation { --filter-tone:var(--event-inflation); }
+.event-filter.tone-jobs { --filter-tone:var(--event-jobs); }
+.event-filter.tone-gdp { --filter-tone:var(--event-gdp); }
+.event-filter-note { color:var(--muted); font-size:10px; }
+.calendar-session-notice { display:flex; flex-wrap:wrap; gap:5px 10px; align-items:baseline; margin:0 0 10px; padding:8px 10px; border:1px solid color-mix(in srgb,var(--event-early-close) 35%,var(--line)); border-radius:8px; background:color-mix(in srgb,var(--event-early-close) 8%,var(--surface)); font-size:11px; }
+.calendar-session-notice b { color:var(--event-early-close); }
+.calendar-session-notice span { color:var(--muted); }
+.calendar-event-dot.tone-inflation { background:var(--event-inflation); }
+.calendar-event-dot.tone-fed { background:var(--event-fed); }
+.calendar-event-dot.tone-jobs { background:var(--event-jobs); }
+.calendar-event-dot.tone-gdp { background:var(--event-gdp); }
+.calendar-event-dot.tone-closed { background:var(--event-closed); }
+.calendar-event-dot.tone-early-close { background:var(--event-early-close); }

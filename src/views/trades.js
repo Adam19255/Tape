@@ -36,7 +36,7 @@ export function tradeList({st,trades}){
     +Pager({page:pg,pages,size:ps,sizes:PAGE_SIZES,total:A.length,from:a+1,to:a+rows.length});
 }
 export function trades(ctx){
-  const{st,trades:T,open}=ctx;if(!T.length)return{html:Empty({open})};
+  const{st,trades:T,open}=ctx;if(!T.length)return{html:Empty({view:'trd',files:st.UP.length,open})};
   const by={};T.forEach(t=>{const b=by[t.sym]||(by[t.sym]={sym:t.sym,n:0,w:0,p:0});b.n++;b.p+=t.net;if(t.net>0)b.w++});
   const symbols=DataTable({rows:Object.values(by).sort((a,b)=>b.p-a.p),rowAttrs:b=>`data-sym="${esc(b.sym)}"`,rowClass:b=>'row-clickable'+(st.q.toLowerCase()===b.sym.toLowerCase()?' is-selected':''),
     cols:[{label:'Symbol',render:b=>`<b>${esc(b.sym)}</b>`},{label:'Trades',key:'n'},{label:'Win %',render:b=>(b.w/b.n*100).toFixed(0)+'%'},

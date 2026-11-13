@@ -94,8 +94,8 @@ function render(anim=true){
   const ready=st.user&&st.loaded;
   $('#auth-gate').hidden=ready;$('#auth-gate').innerHTML=Gate(st.gate);
   renderAccount();
-  $('#dropzone').hidden=!(ready&&!st.UP.length);$('#view').hidden=!(ready&&st.UP.length);$('#toolbar').hidden=!(ready&&st.UP.length);
-  if(!ready||!st.UP.length)return renderModal(null);
+  $('#view').hidden=$('#toolbar').hidden=!ready; // with no files the views show their own empty state, so every tab stays reachable
+  if(!ready)return renderModal(null);
   const cx=ctx(),v=VIEWS[st.tab](cx);
   root.className=anim?'':'is-static';root.innerHTML=TabBar({tabs:TABS,active:st.tab})+v.html;if(v.mount)v.mount(root);
   renderModal(cx);
@@ -253,8 +253,9 @@ on('change','[data-c]',t=>{const k=t.dataset.c;st.CFG[k]=k==='ver'?t.value:parse
 on('change','[data-s]',t=>{const[i,j]=t.dataset.s.split('|');st.CFG.sched[Object.keys(st.CFG.sched)[i]][j]=parseFloat(t.value)||0;saveSettings();set({})});
 on('change','[data-map]',t=>{st.CFG.map=Object.fromEntries(t.value.split('\n').map(l=>l.split('=').map(x=>x.trim())).filter(x=>x[0]&&x[1]));saveSettings();set({})});
 on('change','#file-input,#file-input-more',t=>{readFiles(t.files);t.value=''});
-['dragenter','dragover'].forEach(v=>addEventListener(v,e=>{e.preventDefault();$('#dropzone').classList.add('is-dragging')}));
-['dragleave','drop'].forEach(v=>addEventListener(v,e=>{e.preventDefault();$('#dropzone').classList.remove('is-dragging')}));
+on('click','[data-pick-file]',()=>$('#file-input').click());
+['dragenter','dragover'].forEach(v=>addEventListener(v,e=>{e.preventDefault();document.body.classList.add('is-dragging')}));
+['dragleave','drop'].forEach(v=>addEventListener(v,e=>{e.preventDefault();document.body.classList.remove('is-dragging')}));
 addEventListener('drop',e=>{if(e.dataTransfer.files.length)readFiles(e.dataTransfer.files)});
 if(typeof matchMedia==='function')matchMedia('(max-width:640px)').addEventListener('change',()=>set({}));
 render();

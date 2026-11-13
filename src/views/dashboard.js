@@ -25,7 +25,7 @@ const stamp=(t,time)=>{const d=new Date(t),day=d.toLocaleDateString('en-US',{mon
 
 export function dashboard({st,trades,fills,open}){
   const{CFG,UP,tf}=st,tabs=Chips({items:TIMEFRAMES,active:tf,attr:'tf',cls:'range-tabs'});
-  if(!trades.length)return{html:Empty({open})};
+  if(!trades.length)return{html:Empty({view:'dash',files:UP.length,open})};
   const now=new Date(),T=trades.filter(t=>t.date>=timeframeStart(tf,now));
   // Account value over time: starting balance + deposits - withdrawals + closed-trade P&L. Always built from the full history,
   // then cut to the chosen window, so the value at the left edge is what the account really held then.

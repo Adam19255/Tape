@@ -12,7 +12,7 @@ export function calendar({st,trades,open}){
   const eventIndex=indexByDate(st.EV),hasEvents=Object.keys(eventIndex).length>0;
   const filters=st.evFilters||Object.keys(GROUPS);
   const visibleIndex=Object.fromEntries(Object.entries(eventIndex).map(([date,list])=>[date,list.filter(e=>['session'].includes(kindGroup(e.kind))||filters.includes(kindGroup(e.kind)))]).filter(([,list])=>list.length));
-  if(!trades.length&&!hasEvents)return{html:Empty({open})};
+  if(!trades.length&&!hasEvents)return{html:Empty({view:'cal',files:st.UP.length,open})};
   const fallback=trades.length?latest(trades):ymd(new Date());
   const mon=st.mon||fallback.slice(0,7),[y,mo]=mon.split('-').map(Number),days={};
   trades.filter(t=>t.date.startsWith(mon)).forEach(t=>{const d=days[t.date]||(days[t.date]={value:0,n:0});d.value+=t.net;d.n++;d.sub=d.n+' trade'+(d.n>1?'s':'')});

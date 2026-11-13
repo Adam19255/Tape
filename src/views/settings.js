@@ -8,7 +8,7 @@ import {esc,m,sg,cls,ymd,sum} from '../lib/format.js';
 
 export function settings({st,trades,fills}){
   const{CFG,UP}=st,unk=[...new Set(fills.map(f=>f.vm).filter(v=>!CFG.sched[v]))];
-  const logs=UP.map(u=>`<div class="list-row"><span class="list-row-label">${esc(u.name)} · ${u.n||u.fills.length} fills</span><span class="list-row-actions">${ExportButton({attrs:`data-export-log="${esc(u.id)}"`,title:u.txt?'Export '+u.name:'Re-upload this file to export it (its text was not stored)',disabled:!u.txt})}<button data-del="${esc(u.id)}">Delete</button></span></div>`).join('');
+  const logs=!UP.length?'<p class="hint">No files yet.</p>':UP.map(u=>`<div class="list-row"><span class="list-row-label">${esc(u.name)} · ${u.n||u.fills.length} fills</span><span class="list-row-actions">${ExportButton({attrs:`data-export-log="${esc(u.id)}"`,title:u.txt?'Export '+u.name:'Re-upload this file to export it (its text was not stored)',disabled:!u.txt})}<button data-del="${esc(u.id)}">Delete</button></span></div>`).join('');
   const rate=(i,j,v)=>`<input type="number" step="0.0001" data-s="${i}|${j}" value="${v}">`;
   const sched=DataTable({rows:Object.keys(CFG.sched).map((v,i)=>({v,i,r:CFG.sched[v]})),cols:[{label:'Venue',render:x=>esc(x.v)},
     {label:'Add',render:x=>rate(x.i,0,x.r[0])},{label:'Take',render:x=>rate(x.i,1,x.r[1])},{label:'Out',render:x=>rate(x.i,2,x.r[2])}]});

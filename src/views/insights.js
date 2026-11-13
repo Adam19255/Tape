@@ -14,7 +14,7 @@ const bucketTable=B=>DataTable({rows:B,cols:[{label:'Bucket',render:b=>esc(b.l)}
   {label:'Avg',render:b=>money(b.tot/b.n),tone:b=>cls(b.tot)},{label:'PF',render:pf},{label:'Total',render:b=>money(b.tot),tone:b=>cls(b.tot)}]});
 
 export function insights({st,trades,fills,open}){
-  if(!trades.length)return{html:Empty({open})};
+  if(!trades.length)return{html:Empty({view:'ins',files:st.UP.length,open})};
   const{net}=st,{G,get,drivers,sh,rf,cm}=analyze({st,trades,fills});
   const hl=(label,B,best)=>{const b=pick(B,best);if(!b)return null;
     return{label,value:esc(b.l),tone:cls(b.tot),sub:`${sg(b.tot/b.n)} avg · ${(b.w/b.n*100).toFixed(0)}% win · ${b.n} trades`}};
